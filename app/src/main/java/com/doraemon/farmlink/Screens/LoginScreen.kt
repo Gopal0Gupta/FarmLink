@@ -1,6 +1,8 @@
 package com.doraemon.farmlink.Screens
 
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,6 +47,9 @@ fun LoginScreen(
     }
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
+    BackHandler {
+        (context as? ComponentActivity)?.finish() // Close the app
+    }
     LaunchedEffect(authState.value){
         when(authState.value){
             is AuthState.authenticated -> {

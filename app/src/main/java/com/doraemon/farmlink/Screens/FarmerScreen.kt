@@ -1,5 +1,7 @@
 package com.doraemon.farmlink.Screens
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,10 @@ fun FarmerScreen(
     navController: NavController,
     authViewModel: authViewModel
 ) {
+    val context = LocalContext.current
+    BackHandler {
+        (context as? ComponentActivity)?.finish() // Close the app
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
