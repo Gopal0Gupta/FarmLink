@@ -46,7 +46,18 @@ fun SignupScreen(
     val context = LocalContext.current
     LaunchedEffect(authState.value){
         when(authState.value){
-            is AuthState.authenticated -> navController.navigate("home")
+            is AuthState.authenticated -> {
+                authViewModel.getUserRoleFromFirestore(context) { storedRole ->
+                    if (storedRole != null) {
+                        if (storedRole == "farmer") {
+                            navController.navigate("farmer")
+                        } else if (storedRole == "buyer") {
+                            navController.navigate("buyer")
+                        }
+                    }
+                }
+                navController.navigate("role")
+            }
             is AuthState.error -> Toast.makeText(context,
                 (authState.value as AuthState.error).message,Toast.LENGTH_SHORT).show()
             else -> Unit

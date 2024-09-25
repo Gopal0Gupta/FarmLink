@@ -1,6 +1,5 @@
 package com.doraemon.farmlink.Screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,30 +18,30 @@ import com.doraemon.farmlink.AuthState
 import com.doraemon.farmlink.authViewModel
 
 @Composable
-fun HomeScreen(
+fun BuyerScreen(
     modifier: Modifier,
     navController: NavController,
     authViewModel: authViewModel
 ) {
-    val authState = authViewModel.authState.observeAsState()
-    val context = LocalContext.current
-    LaunchedEffect(authState.value){
-        when(authState.value){
-            is AuthState.unauthenticated -> navController.navigate("login")
-            else -> Unit
-        }
-    }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val authState = authViewModel.authState.observeAsState()
+        val context = LocalContext.current
+        LaunchedEffect(authState.value){
+            when(authState.value){
+                is AuthState.unauthenticated -> navController.navigate("login")
+                else -> Unit
+            }
+        }
         Text(
-            text = "Home Page",
+            text = "Buyer Screen",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold
         )
-        TextButton(onClick = { 
+        TextButton(onClick = {
             authViewModel.signout()
         }) {
             Text(text = "Sign Out")
