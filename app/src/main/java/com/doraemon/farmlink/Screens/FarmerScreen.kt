@@ -57,9 +57,6 @@ import com.doraemon.farmlink.authViewModel
 fun FarmerScreen(authViewModel: authViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
-    BackHandler {
-        (context as? ComponentActivity)?.finish() // Close the app
-    }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

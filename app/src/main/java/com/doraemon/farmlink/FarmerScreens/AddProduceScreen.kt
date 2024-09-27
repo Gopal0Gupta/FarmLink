@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.doraemon.farmlink.R
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -120,8 +121,10 @@ fun AddProduceScreen() {
             Spacer(modifier = Modifier.height(20.dp))
             Button(onClick = {
                 if (imageUri != null){
-                    imageUri.let { uri ->  
-                        uploadImageToFirebase(uri,context)
+                    imageUri.let { uri ->
+                        if (uri != null) {
+                            uploadProduceToFirebase(produceName, price,description, uri,context)
+                        }
                     }
                 }else{
                     Toast.makeText(context,"Please Upload Image From Gallery",Toast.LENGTH_SHORT).show()
@@ -132,19 +135,43 @@ fun AddProduceScreen() {
         }
     }
 }
-
-fun uploadImageToFirebase(uri: Uri?, context: Context) {
+fun uploadProduceToFirebase(produceName: String, price: String, description: String, uri: Uri, context: Context) {
     val storage = FirebaseStorage.getInstance()
-    val storageRefrence = storage.reference
-    val imageRefrence = storageRefrence.child("image/"+uri!!.lastPathSegment)
+    val storageReference = storage.reference
+    val imageReference = storageReference.child("image/" + uri.lastPathSegment)
 
-    val uploadTask = uri.let { imageRefrence.putFile(it) }
-
+    val uploadTask = imageReference.putFile(uri)
     uploadTask.addOnSuccessListener {
-        Toast.makeText(context,"Image Upload Complete",Toast.LENGTH_SHORT).show()
-    }.addOnFailureListener{
-        Toast.makeText(context,"Image Upload Complete",Toast.LENGTH_SHORT).show()
+        imageReference.downloadUrl.addOnSuccessListener { downloadUri ->
+            // Save produce details to Firestore
+            saveProduceDetailsToFirestore(produceName, price, description, downloadUri.toString(), context)
+        }
+        Toast.makeText(context, "Produce Upload Complete", Toast.LENGTH_SHORT).show()
+    }.addOnFailureListener {
+        Toast.makeText(context, "Image Upload Failed", Toast.LENGTH_SHORT).show()
     }
+}
+
+fun saveProduceDetailsToFirestore(produceName: String, price: String, description: String, imageUrl: String, context: Context) {
+    val db = FirebaseFirestore.getInstance()
+
+    // Create a produce data map
+    val produceData = hashMapOf(
+        "name" to produceName,
+        "price" to price,
+        "description" to description,
+        "imageUrl" to imageUrl
+    )
+
+    // Save to Firestore under a new document
+    db.collection("produce")
+        .add(produceData)
+        .addOnSuccessListener {
+            Toast.makeText(context, "Produce details added to Firestore", Toast.LENGTH_SHORT).show()
+        }
+        .addOnFailureListener {
+            Toast.makeText(context, "Failed to add produce details to Firestore", Toast.LENGTH_SHORT).show()
+        }
 }
 
 /*
