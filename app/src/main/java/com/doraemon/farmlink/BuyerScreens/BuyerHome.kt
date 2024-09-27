@@ -1,7 +1,9 @@
+
 package com.doraemon.farmlink.BuyerScreens
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +16,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,9 +31,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.doraemon.farmlink.BuyerScreens.Produce
+import com.doraemon.farmlink.R
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
@@ -68,12 +78,39 @@ fun BuyerHome() {
 
 @Composable
 fun ProduceCard(produce: Produce) {
+    val context = LocalContext.current
+    val db = FirebaseFirestore.getInstance()
+    var farmerName by remember { mutableStateOf("Fetching...") }
+
+    // Fetch farmer's name based on farmerId
+    LaunchedEffect(produce.farmerId) {
+        if (produce.farmerId.isNotEmpty()) {
+            db.collection("users").document(produce.farmerId)
+                .get()
+                .addOnSuccessListener { document ->
+                    farmerName = document.getString("name") ?: "Unknown Farmer"
+                }
+                .addOnFailureListener {
+                    farmerName = "Unknown Farmer"
+                    Toast.makeText(context, "Error fetching farmer's name", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            farmerName = "Unknown Farmer"
+        }
+    }
     Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = "Farmer Name: ${farmerName}",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
         if (produce.imageUrl.isNotEmpty()) {
             Image(
                 painter = rememberAsyncImagePainter(produce.imageUrl),
                 contentDescription = "Produce Image",
-                modifier = Modifier.fillMaxWidth().height(300.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
             )
         }
 
@@ -82,16 +119,57 @@ fun ProduceCard(produce: Produce) {
             horizontalArrangement = Arrangement.Start
         ) {
             Text(
-                "Name: ${produce.name}",
+                text = "Crop: ${produce.name}",
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                "Price: ${produce.price}",
+                text = "Price: ₹ ${produce.price}/KG",
                 modifier = Modifier.weight(1f)
             )
         }
+
         Text(text = "Description: ${produce.description}")
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = {
+
+                },
+                modifier = Modifier
+                    .weight(4f)
+                    .padding(end = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                Row {
+                    // Icon
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart, // Replace with your icon
+                        contentDescription = "Add Icon"
+                    )
+                    // Space between icon and text
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Add to Cart")
+                }
+            }
+
+            Image(
+                painter = painterResource(id = R.drawable.chat),
+                contentDescription = "Clickable Image",
+                modifier = Modifier
+                    .weight(1f)
+                    .size(40.dp)
+                    .clickable {
+
+                    }
+            )
+        }
+
     }
 }
 data class Produce(
