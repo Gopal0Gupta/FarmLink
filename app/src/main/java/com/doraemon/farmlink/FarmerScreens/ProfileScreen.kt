@@ -11,10 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.doraemon.farmlink.authViewModel
 
 @Composable
-fun ProfileScreen(authViewModel: authViewModel) {
+fun ProfileScreen(authViewModel: authViewModel, navController : NavController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -22,6 +23,7 @@ fun ProfileScreen(authViewModel: authViewModel) {
     ) {
         TextButton(onClick = {
             authViewModel.signout()
+            navController.navigate("login")
         }) {
             Text(text = "Sign Out")
         }

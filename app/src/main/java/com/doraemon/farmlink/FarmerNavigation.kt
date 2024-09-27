@@ -25,7 +25,7 @@ fun FarmerNavigation(authViewModel: authViewModel,navController: NavHostControll
             TransactionScreen()
         }
         composable("profile") {
-            ProfileScreen(authViewModel)
+            ProfileScreen(authViewModel,navController)
         }
     }
 }

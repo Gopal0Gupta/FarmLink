@@ -12,15 +12,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,14 +37,18 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.doraemon.farmlink.R
 import com.google.firebase.storage.FirebaseStorage
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProduceScreen() {
-
+    var produceName by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
     var imageUri by remember{
         mutableStateOf<Uri?>(null)
     }
@@ -64,6 +72,37 @@ fun AddProduceScreen() {
             }else{
                 painterResource(id = R.drawable.gallery)
             }
+            // Produce Name Input
+            TextField(
+                value = produceName,
+                onValueChange = { produceName = it },
+                label = { Text("Produce Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Price Input
+            TextField(
+                value = price,
+                onValueChange = { price = it },
+                label = { Text("Price") },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Description Input
+            TextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Description") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Image(
                 painter = painter,
                 contentDescription = null,
@@ -88,7 +127,7 @@ fun AddProduceScreen() {
                     Toast.makeText(context,"Please Upload Image From Gallery",Toast.LENGTH_SHORT).show()
                 }
             }, shape = RoundedCornerShape(5.dp)) {
-                Text(text = "Upload Image")
+                Text(text = "Upload")
             }
         }
     }
