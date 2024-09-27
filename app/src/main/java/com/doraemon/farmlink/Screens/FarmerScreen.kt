@@ -77,7 +77,7 @@ fun FarmerScreen(authViewModel: authViewModel) {
                 BottomNavigationBar(navController)
             }
         ) { paddingValues ->
-            FarmerNavigation(authViewModel,navController, paddingValues)
+            FarmerNavigation(navController, paddingValues)
         }
     }
 }

@@ -29,10 +29,10 @@ fun FarmLinkNavigation(modifier: Modifier, authViewModel: authViewModel, farmerV
             RoleScreen(modifier, navController, authViewModel)
         }
         composable("farmer"){
-            FarmerScreen(authViewModel)
+            FarmerScreen(authViewModel,)
         }
         composable("buyer"){
-            BuyerScreen(modifier, navController, authViewModel)
+            BuyerScreen()
         }
     })
 }
