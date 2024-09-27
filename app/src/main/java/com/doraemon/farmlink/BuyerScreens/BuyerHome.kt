@@ -147,12 +147,10 @@ fun ProduceCard(produce: Produce) {
                     .fillMaxWidth()
             ) {
                 Row {
-                    // Icon
                     Icon(
                         imageVector = Icons.Default.ShoppingCart, // Replace with your icon
                         contentDescription = "Add Icon"
                     )
-                    // Space between icon and text
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Add to Cart")
                 }
@@ -177,5 +175,5 @@ data class Produce(
     val price: String,
     val description: String,
     val imageUrl: String,
-    val farmerId: String // Optional, to identify the farmer
+    val farmerId: String
 )

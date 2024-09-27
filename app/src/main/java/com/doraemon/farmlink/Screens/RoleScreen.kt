@@ -51,7 +51,7 @@ fun RoleScreen(
         Spacer(modifier.height(25.dp))
         Column(
             modifier = Modifier.clickable {
-                authViewModel.saveUserRoleToFirestore(context,"farmer")
+                authViewModel.saveUserRoleToFirestore(context,"farmer",authViewModel.Name)
                 navController.navigate("farmer")
             },
             verticalArrangement = Arrangement.Center,
@@ -75,7 +75,7 @@ fun RoleScreen(
         Spacer(modifier.height(15.dp))
         Column(
             modifier = Modifier.clickable {
-                authViewModel.saveUserRoleToFirestore(context,"buyer")
+                authViewModel.saveUserRoleToFirestore(context,"buyer", authViewModel.Name)
                 navController.navigate("buyer")
             },
             verticalArrangement = Arrangement.Center,

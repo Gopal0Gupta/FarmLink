@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -68,14 +67,14 @@ class authViewModel : ViewModel() {
         auth.signOut()
         _authState.value = AuthState.unauthenticated
     }
-    fun saveUserRoleToFirestore(context : Context, role: String) {
+    fun saveUserRoleToFirestore(context : Context, role: String, name: String) {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
 
         if (uid != null) {
             val userData = hashMapOf(
                 "role" to role,
-                "name" to Name
+                "name" to name
             )
             db.collection("users").document(uid).set(userData)
                 .addOnSuccessListener {

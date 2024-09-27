@@ -24,7 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -62,27 +64,32 @@ fun HomeScreen() {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
+                Text(
+                    text = "Your Produce",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 Image(
                     painter = rememberAsyncImagePainter(produce.imageUrl),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().height(300.dp)
+                    modifier = Modifier.fillMaxWidth().height(250.dp)
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Text(
-                        "Name: ${produce.name}",
+                        text = "Crop: ${produce.name}",
                         modifier = Modifier.weight(1f)
-                        )
+                    )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        "Price: ${produce.price}",
+                        text = "Price: ₹ ${produce.price}/KG",
                         modifier = Modifier.weight(1f)
                     )
                 }
-                Text("Description: ${produce.description}")
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(text = "Description: ${produce.description}")
             }
         }
     }
