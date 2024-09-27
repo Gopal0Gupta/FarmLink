@@ -76,6 +76,7 @@ fun ProduceCard(produce: Produce) {
                 modifier = Modifier.fillMaxWidth().height(300.dp)
             )
         }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
