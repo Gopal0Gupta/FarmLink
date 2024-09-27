@@ -3,6 +3,9 @@ package com.doraemon.farmlink
 import android.content.Context
 import android.os.Message
 import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +18,7 @@ class authViewModel : ViewModel() {
     val auth : FirebaseAuth = FirebaseAuth.getInstance()
     val _authState = MutableLiveData<AuthState>()
     val authState : LiveData<AuthState> = _authState
+    var Name by mutableStateOf("")
     init {
         checkAuthStatus()
     }
@@ -43,7 +47,8 @@ class authViewModel : ViewModel() {
             }
     }
 
-    fun signup(email : String, password : String){
+    fun signup(name : String, email : String, password : String){
+        Name = name
         if(email.isEmpty() || password.isEmpty()){
             _authState.value = AuthState.error("Email & Password can't be Empty")
             return
@@ -69,7 +74,8 @@ class authViewModel : ViewModel() {
 
         if (uid != null) {
             val userData = hashMapOf(
-                "role" to role
+                "role" to role,
+                "name" to Name
             )
             db.collection("users").document(uid).set(userData)
                 .addOnSuccessListener {

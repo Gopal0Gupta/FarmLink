@@ -16,10 +16,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val authViewModel : authViewModel by viewModels()
+        val farmerViewModel: FarmerViewModel by viewModels()
         setContent {
             FarmLinkTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    FarmLinkNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel)
+                    FarmLinkNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel,farmerViewModel)
                 }
             }
         }

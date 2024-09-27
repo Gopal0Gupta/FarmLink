@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.doraemon.farmlink.Screens.AddProduceScreen
 import com.doraemon.farmlink.Screens.BuyerScreen
 import com.doraemon.farmlink.Screens.FarmerScreen
 import com.doraemon.farmlink.Screens.LoginScreen
@@ -12,7 +13,7 @@ import com.doraemon.farmlink.Screens.RoleScreen
 import com.doraemon.farmlink.Screens.SignupScreen
 
 @Composable
-fun FarmLinkNavigation(modifier: Modifier, authViewModel: authViewModel) {
+fun FarmLinkNavigation(modifier: Modifier, authViewModel: authViewModel, farmerViewModel: FarmerViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "login", builder = {
         composable("login"){
@@ -24,8 +25,11 @@ fun FarmLinkNavigation(modifier: Modifier, authViewModel: authViewModel) {
         composable("role"){
             RoleScreen(modifier, navController, authViewModel)
         }
+        composable("addproduce"){
+            AddProduceScreen(modifier, navController, authViewModel, farmerViewModel)
+        }
         composable("farmer"){
-            FarmerScreen(modifier, navController, authViewModel)
+            FarmerScreen(modifier, navController, authViewModel, farmerViewModel)
         }
         composable("buyer"){
             BuyerScreen(modifier, navController, authViewModel)

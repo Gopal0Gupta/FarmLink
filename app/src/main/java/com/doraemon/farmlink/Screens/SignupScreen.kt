@@ -38,6 +38,9 @@ fun SignupScreen(
     navController: NavController,
     authViewModel: authViewModel
 ) {
+    var name by remember {
+        mutableStateOf("")
+    }
     var email by remember {
         mutableStateOf("")
     }
@@ -81,6 +84,16 @@ fun SignupScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        OutlinedTextField(value = name, onValueChange = {
+            name = it
+        },
+            label = {
+                Text(text = "Name")
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(value = email, onValueChange = {
             email = it
         },
@@ -102,7 +115,7 @@ fun SignupScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            authViewModel.signup(email,password)
+            authViewModel.signup(name,email,password)
         },
             enabled = authState.value != AuthState.loading
         ) {
