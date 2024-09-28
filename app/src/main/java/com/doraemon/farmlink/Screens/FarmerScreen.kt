@@ -30,6 +30,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,7 @@ import com.doraemon.farmlink.authViewModel
 fun FarmerScreen(authViewModel: authViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
+    val customGreen = Color(0xFF3CB62F)
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -69,7 +71,7 @@ fun FarmerScreen(authViewModel: authViewModel) {
                             text = "FarmLink",
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold ) },
-                    backgroundColor = Color.Green,
+                    backgroundColor = customGreen,
                     contentColor = Color.White
                 )
             },
@@ -83,8 +85,9 @@ fun FarmerScreen(authViewModel: authViewModel) {
 }
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
+    val customGreen = Color(0xFF3CB62F)
     BottomNavigation(
-        backgroundColor = Color.Green,
+        backgroundColor = customGreen,
         contentColor = Color.White
     ) {
         BottomNavigationItem(

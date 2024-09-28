@@ -59,6 +59,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 fun BuyerScreen() {
     val navController = rememberNavController()
     val context = LocalContext.current
+    val customBlue = Color(0xFF329AF5)
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -72,7 +73,7 @@ fun BuyerScreen() {
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     ) },
-                    backgroundColor = Color.Blue,
+                    backgroundColor = customBlue,
                     contentColor = Color.White
                 ) },
             bottomBar = {
@@ -85,8 +86,9 @@ fun BuyerScreen() {
 }
 @Composable
 fun BottomNavigationBarBuyer(navController: NavHostController) {
+    val customBlue = Color(0xFF329AF5)
     BottomNavigation(
-        backgroundColor = Color.Blue,
+        backgroundColor = customBlue,
         contentColor = Color.White
     ) {
             BottomNavigationItem(
@@ -95,6 +97,12 @@ fun BottomNavigationBarBuyer(navController: NavHostController) {
                 selected = false,
                 onClick = { navController.navigate("home") }
             )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "AddCart") },
+            label = { Text("Cart") },
+            selected = false,
+            onClick = { navController.navigate("add-cart") }
+        )
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.LocationOn, contentDescription = "Track Order") },
                 label = { Text("Track") },
