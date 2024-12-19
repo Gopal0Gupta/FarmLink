@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,13 +36,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.doraemon.farmlink.BuyerScreens.Produce
 import com.doraemon.farmlink.R
+import com.doraemon.farmlink.authViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 
+
 @Composable
-fun BuyerHome() {
+fun BuyerHome(navController: NavHostController,authViewModel: authViewModel) {
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
     var produceList by remember { mutableStateOf<List<Produce>>(emptyList()) }
@@ -73,13 +74,13 @@ fun BuyerHome() {
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(produceList) { produce ->
-            ProduceCard(produce) // A Composable to display each produce item
+            ProduceCard(produce,authViewModel) // A Composable to display each produce item
         }
     }
 }
 
 @Composable
-fun ProduceCard(produce: Produce) {
+fun ProduceCard(produce: Produce,authViewModel: authViewModel) {
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
     var farmerName by remember { mutableStateOf("Fetching...") }
@@ -139,9 +140,10 @@ fun ProduceCard(produce: Produce) {
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            var intprice : Int = produce.price.toInt()
             Button(
                 onClick = {
-
+                    authViewModel.startRazorpayPayment(context,intprice)
                 },
                 modifier = Modifier
                     .weight(4f)
@@ -154,7 +156,7 @@ fun ProduceCard(produce: Produce) {
                         contentDescription = "Add Icon"
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Add to Cart")
+                    Text(text = "Buy Now")
                 }
             }
 

@@ -5,6 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.doraemon.farmlink.BuyerScreens.BuyerCart
+import com.doraemon.farmlink.BuyerScreens.BuyerProfile
+import com.doraemon.farmlink.BuyerScreens.BuyerTrack
 import com.doraemon.farmlink.FarmerScreens.AddProduceScreen
 import com.doraemon.farmlink.FarmerScreens.HomeScreen
 import com.doraemon.farmlink.FarmerScreens.ProfileScreen
@@ -29,10 +32,34 @@ fun FarmLinkNavigation(modifier: Modifier, authViewModel: authViewModel, farmerV
             RoleScreen(modifier, navController, authViewModel)
         }
         composable("farmer"){
-            FarmerScreen(authViewModel,)
+            FarmerScreen(navController)
         }
         composable("buyer"){
-            BuyerScreen()
+            BuyerScreen(navController)
+        }
+        composable("farmerHome") {
+            HomeScreen(navController)
+        }
+        composable("produce") {
+            AddProduceScreen(navController)
+        }
+        composable("transaction") {
+            TransactionScreen(navController)
+        }
+        composable("farmerProfile") {
+            ProfileScreen(navController,authViewModel)
+        }
+        composable("home") {
+            com.doraemon.farmlink.BuyerScreens.BuyerHome(navController,authViewModel)
+        }
+        composable("add-cart") {
+            BuyerCart(navController)
+        }
+        composable("track") {
+            BuyerTrack(navController)
+        }
+        composable("profile") {
+            BuyerProfile(navController,authViewModel)
         }
     })
 }

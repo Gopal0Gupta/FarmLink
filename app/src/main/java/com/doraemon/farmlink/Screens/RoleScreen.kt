@@ -35,9 +35,6 @@ fun RoleScreen(
     authViewModel: authViewModel
 ) {
     val context = LocalContext.current
-    BackHandler {
-        (context as? ComponentActivity)?.finish() // Close the app
-    }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

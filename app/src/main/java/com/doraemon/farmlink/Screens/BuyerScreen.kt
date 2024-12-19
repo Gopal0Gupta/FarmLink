@@ -1,25 +1,10 @@
 package com.doraemon.farmlink.Screens
 
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
@@ -28,92 +13,108 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import com.doraemon.farmlink.AuthState
-import com.doraemon.farmlink.BuyerNavigation
-import com.doraemon.farmlink.FarmerNavigation
-import com.doraemon.farmlink.FarmerScreens.Produce
+import com.doraemon.farmlink.BuyerScreens.BuyerCart
+import com.doraemon.farmlink.BuyerScreens.BuyerHome
+import com.doraemon.farmlink.BuyerScreens.BuyerProfile
+import com.doraemon.farmlink.BuyerScreens.BuyerTrack
+import com.doraemon.farmlink.FarmerScreens.ProfileScreen
 import com.doraemon.farmlink.authViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BuyerScreen() {
-    val navController = rememberNavController()
-    val context = LocalContext.current
+fun BuyerScreen(navController: NavHostController) {
+    val navController = rememberNavController() // Create NavController instance
     val customBlue = Color(0xFF329AF5)
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
                         text = "FarmLink",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
-                    ) },
-                    backgroundColor = customBlue,
-                    contentColor = Color.White
-                ) },
-            bottomBar = {
-                BottomNavigationBarBuyer(navController)
-            }
-        ) { paddingValues ->
-            BuyerNavigation(navController, paddingValues)
+                    )
+                },
+                backgroundColor = customBlue,
+                contentColor = Color.White
+            )
+        },
+        bottomBar = {
+            BottomNavigationBarBuyer(navController)
         }
+    ) { paddingValues ->
+        NavigationContent(navController, Modifier.padding(paddingValues))
     }
 }
+
+@Composable
+fun NavigationContent(navController: NavHostController, modifier: Modifier = Modifier) {
+    NavHost(
+        navController = navController,
+        startDestination = "home", // Default screen
+        modifier = modifier // Apply padding from Scaffold
+    ) {
+        composable("home") { BuyerHome(navController, authViewModel()) }
+        composable("add-cart") { BuyerCart(navController) }
+        composable("track") { BuyerTrack(navController) }
+        composable("profile") { BuyerProfile(navController, authViewModel()) }
+    }
+}
+
 @Composable
 fun BottomNavigationBarBuyer(navController: NavHostController) {
     val customBlue = Color(0xFF329AF5)
+    val currentRoute = navController.currentBackStackEntry?.destination?.route
+
     BottomNavigation(
         backgroundColor = customBlue,
         contentColor = Color.White
     ) {
-            BottomNavigationItem(
-                icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                label = { Text("Home") },
-                selected = false,
-                onClick = { navController.navigate("home") }
-            )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "AddCart") },
-            label = { Text("Cart") },
-            selected = false,
-            onClick = { navController.navigate("add-cart") }
+            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            label = { Text("Home") },
+            selected = currentRoute == "home",
+            onClick = {
+                if (currentRoute != "home") navController.navigate("home")
+            }
         )
-            BottomNavigationItem(
-                icon = { Icon(Icons.Default.LocationOn, contentDescription = "Track Order") },
-                label = { Text("Track") },
-                selected = false,
-                onClick = { navController.navigate("track") }
-            )
-            BottomNavigationItem(
-                icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-                label = { Text("Profile") },
-                selected = false,
-                onClick = { navController.navigate("profile") }
-            )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart") },
+            label = { Text("Cart") },
+            selected = currentRoute == "add-cart",
+            onClick = {
+                if (currentRoute != "add-cart") navController.navigate("add-cart")
+            }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.LocationOn, contentDescription = "Track Order") },
+            label = { Text("Track") },
+            selected = currentRoute == "track",
+            onClick = {
+                if (currentRoute != "track") navController.navigate("track")
+            }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+            label = { Text("Profile") },
+            selected = currentRoute == "profile",
+            onClick = {
+                if (currentRoute != "profile") navController.navigate("profile")
+            }
+        )
     }
 }

@@ -8,9 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 @Composable
-fun TransactionScreen() {
+fun TransactionScreen(navController: NavHostController) {
     LazyColumn {
         items(10) { index ->
             Text(text = "Transaction Item $index", modifier = Modifier.padding(16.dp))
